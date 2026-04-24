@@ -7,6 +7,7 @@ NeuroWeb is a visual second brain that maps thoughts and their connections in an
 - Add thoughts with title, short description, and optional tag.
 - View all thoughts as a glowing interactive graph.
 - Connect any two thoughts with links.
+- See a live connection list so each new link is immediately visible.
 - Click a node to inspect thought details.
 - Jump to a random thought using the exploration button.
 - Delete everything with one button when you want a clean slate.
