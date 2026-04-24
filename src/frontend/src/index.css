@@ -95,8 +95,10 @@
     --glow-secondary: 0.55 0.18 280;
   }
 
-  * {
-    @apply border-border;
+  *,
+  *::before,
+  *::after {
+    @apply border-border box-border;
   }
   body {
     @apply bg-background text-foreground font-body antialiased;
