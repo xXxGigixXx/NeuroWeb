@@ -54,7 +54,11 @@ export function AddThoughtModal({ open, onOpenChange }: AddThoughtModalProps) {
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent
+           codex/fix-github-pages-deployment-issue-0j89n9
         className="border-zinc-800 bg-zinc-950 text-zinc-100 p-7 sm:p-8"
+
+        className="border-zinc-800 bg-zinc-950 text-zinc-100 p-7 sm:max-w-lg"
+             main
         data-ocid="add_thought.dialog"
       >
         <DialogHeader className="pb-2">
