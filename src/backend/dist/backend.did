@@ -1,0 +1,32 @@
+type ThoughtId = nat;
+type Thought = 
+ record {
+   createdAt: int;
+   description: opt text;
+   id: ThoughtId;
+   tag: opt text;
+   title: text;
+ };
+type CreateThoughtArgs = 
+ record {
+   description: opt text;
+   tag: opt text;
+   title: text;
+ };
+type ConnectionId = nat;
+type Connection = 
+ record {
+   fromId: ThoughtId;
+   id: ConnectionId;
+   toId: ThoughtId;
+ };
+service : {
+  clearAll: () -> ();
+  createConnection: (fromId: ThoughtId, toId: ThoughtId) -> (Connection);
+  createThought: (args: CreateThoughtArgs) -> (Thought);
+  deleteConnection: (id: ConnectionId) -> ();
+  deleteThought: (id: ThoughtId) -> ();
+  getThought: (id: ThoughtId) -> (opt Thought) query;
+  listConnections: () -> (vec Connection) query;
+  listThoughts: () -> (vec Thought) query;
+}

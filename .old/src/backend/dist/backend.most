@@ -1,0 +1,35 @@
+// Version: 1.0.0
+type ConnectionId__733477927 = Nat;
+type Connection__957657463 =
+  {
+    fromId : ThoughtId__480826089;
+    id : ConnectionId__733477927;
+    toId : ThoughtId__480826089
+  };
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type ThoughtId__480826089 = Nat;
+type Thought__678667673 =
+  {
+    createdAt : Int;
+    description : ?Text;
+    id : ThoughtId__480826089;
+    tag : ?Text;
+    title : Text
+  };
+actor {
+  stable connections :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Connection__957657463]];
+      var elementIndex : Nat__490723111
+    };
+  stable var nextConnectionId : Nat;
+  stable var nextThoughtId : Nat;
+  stable thoughts :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Thought__678667673]];
+      var elementIndex : Nat__490723111
+    }
+};

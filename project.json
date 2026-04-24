@@ -1,0 +1,22 @@
+{
+  "overview": "NeuroWeb is a visual second brain that maps your thoughts and their connections as a glowing interactive network graph. Add ideas, link them together, explore them visually, and discover connections in your thinking.",
+  "features": [
+    "Add thoughts with title, description, and tag",
+    "Interactive glowing force-directed graph",
+    "Connect any two thoughts with links",
+    "Click nodes to inspect thought details",
+    "Jump to a random thought with Explore button",
+    "Clear all thoughts with one button",
+    "Data persists in browser localStorage"
+  ],
+  "category": "productivity",
+  "tags": [
+    "second-brain",
+    "mind-map",
+    "graph",
+    "thoughts",
+    "knowledge-management",
+    "visualization"
+  ],
+  "last_updated": "2026-04-24T16:39:09.694Z"
+}
