@@ -9,8 +9,10 @@ const elements = {
   tagInput: document.getElementById("tagInput"),
   fromSelect: document.getElementById("fromSelect"),
   toSelect: document.getElementById("toSelect"),
+  connectionsList: document.getElementById("connectionsList"),
   detailsContent: document.getElementById("detailsContent"),
   randomThoughtBtn: document.getElementById("randomThoughtBtn"),
+  clearAllBtn: document.getElementById("clearAllBtn"),
   statusMessage: document.getElementById("statusMessage"),
   network: document.getElementById("network"),
 };
@@ -31,6 +33,7 @@ function bootstrap() {
   wireEvents();
   syncGraph();
   renderSelectOptions();
+  renderConnectionsList();
 }
 
 function loadState() {
@@ -98,13 +101,20 @@ function initNetwork() {
         },
       },
       edges: {
-        color: { color: "#4f8bd6", highlight: "#8fd6ff" },
+        color: { color: "#6fb8ff", highlight: "#c7ebff" },
         smooth: {
           enabled: true,
           type: "dynamic",
           roundness: 0.35,
         },
-        width: 1.4,
+        width: 2.2,
+        shadow: {
+          enabled: true,
+          color: "rgba(111, 184, 255, 0.55)",
+          size: 8,
+          x: 0,
+          y: 0,
+        },
       },
       nodes: {
         shape: "dot",
@@ -161,6 +171,7 @@ function wireEvents() {
     saveState();
     syncGraph();
     renderSelectOptions();
+    renderConnectionsList();
     elements.thoughtForm.reset();
     setStatus("Thought added.");
   });
@@ -190,7 +201,9 @@ function wireEvents() {
     state.connections.push({ from, to });
     saveState();
     syncGraph();
-    setStatus("Connection created.");
+    renderConnectionsList();
+    focusConnection(from, to);
+    setStatus(`Connection created: ${getThoughtTitle(from)} → ${getThoughtTitle(to)}.`);
   });
 
   elements.randomThoughtBtn.addEventListener("click", () => {
@@ -204,11 +217,8 @@ function wireEvents() {
     showThoughtDetails(randomThought.id);
     setStatus("Exploring random thought.");
   });
-}
 
-function syncGraph() {
-  nodes.clear();
- elements.clearAllBtn.addEventListener("click", () => {
+  elements.clearAllBtn.addEventListener("click", () => {
     const confirmed = window.confirm(
       "Delete all thoughts and connections? This cannot be undone."
     );
@@ -223,10 +233,40 @@ function syncGraph() {
     localStorage.setItem(SEEDED_KEY, "true");
     syncGraph();
     renderSelectOptions();
+    renderConnectionsList();
     elements.detailsContent.innerHTML = "<p>Everything has been deleted.</p>";
     setStatus("All thoughts and connections deleted.");
   });
 }
+
+function syncGraph() {
+  nodes.clear();
+  edges.clear();
+
+  state.thoughts.forEach((thought) => {
+    nodes.add({
+      id: thought.id,
+      label: thought.title,
+      title: thought.content,
+      value: 16,
+    });
+  });
+
+  state.connections.forEach((connection, index) => {
+    const fromExists = state.thoughts.some((thought) => thought.id === connection.from);
+    const toExists = state.thoughts.some((thought) => thought.id === connection.to);
+    if (!fromExists || !toExists) {
+      return;
+    }
+
+    edges.add({
+      id: makeEdgeId(connection.from, connection.to, index),
+      from: connection.from,
+      to: connection.to,
+    });
+  });
+}
+
 function renderSelectOptions() {
   const options = state.thoughts
     .map((thought) => `<option value="${thought.id}">${escapeHtml(thought.title)}</option>`)
@@ -239,6 +279,25 @@ function renderSelectOptions() {
   const disabled = state.thoughts.length < 2;
   elements.fromSelect.disabled = disabled;
   elements.toSelect.disabled = disabled;
+}
+
+function renderConnectionsList() {
+  if (state.connections.length === 0) {
+    elements.connectionsList.innerHTML = "<li>No connections yet.</li>";
+    return;
+  }
+
+  const lines = state.connections
+    .filter((connection) =>
+      state.thoughts.some((thought) => thought.id === connection.from) &&
+      state.thoughts.some((thought) => thought.id === connection.to)
+    )
+    .map(
+      (connection) =>
+        `<li>${escapeHtml(getThoughtTitle(connection.from))} → ${escapeHtml(getThoughtTitle(connection.to))}</li>`
+    );
+
+  elements.connectionsList.innerHTML = lines.length > 0 ? lines.join("") : "<li>No connections yet.</li>";
 }
 
 function showThoughtDetails(id) {
@@ -274,6 +333,27 @@ function focusNode(id) {
 
 function setStatus(message) {
   elements.statusMessage.textContent = message;
+}
+
+function focusConnection(from, to) {
+  network.selectNodes([from, to]);
+  network.fit({
+    nodes: [from, to],
+    animation: {
+      duration: 500,
+      easingFunction: "easeInOutQuad",
+    },
+  });
+}
+
+function makeEdgeId(from, to, index) {
+  const ordered = [from, to].sort();
+  return `${ordered[0]}-${ordered[1]}-${index}`;
+}
+
+function getThoughtTitle(id) {
+  const thought = state.thoughts.find((item) => item.id === id);
+  return thought ? thought.title : "Unknown thought";
 }
 
 function makeId() {
