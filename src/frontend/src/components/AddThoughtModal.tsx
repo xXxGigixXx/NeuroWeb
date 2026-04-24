@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -49,25 +48,25 @@ export function AddThoughtModal({ open, onOpenChange }: AddThoughtModalProps) {
     handleClose();
   }
 
+  const fieldClassName =
+    "rounded-lg bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-400 focus-visible:border-zinc-500 focus-visible:ring-zinc-500/50";
+
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent
-        className="panel-glass border-border/50 text-foreground sm:max-w-md"
+        className="border-zinc-800 bg-zinc-950 text-zinc-100 p-7 sm:max-w-lg"
         data-ocid="add_thought.dialog"
       >
-        <DialogHeader>
-          <DialogTitle className="font-display text-foreground flex items-center gap-2">
+        <DialogHeader className="pb-2">
+          <DialogTitle className="font-display text-zinc-100 flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-primary" />
             New Thought
           </DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="space-y-2">
-            <Label
-              htmlFor="thought-title"
-              className="text-sm text-foreground/80 font-body"
-            >
+        <form onSubmit={handleSubmit} className="space-y-7">
+          <div className="space-y-2.5">
+            <Label htmlFor="thought-title" className="text-sm text-zinc-200 font-body">
               Title <span className="text-destructive">*</span>
             </Label>
             <Input
@@ -80,8 +79,8 @@ export function AddThoughtModal({ open, onOpenChange }: AddThoughtModalProps) {
               onBlur={() => {
                 if (!title.trim()) setTitleError("Title is required");
               }}
-              placeholder="What's on your mind?"
-              className="bg-secondary/50 border-border/50 text-foreground placeholder:text-muted-foreground focus-visible:ring-primary/50 focus-visible:border-primary/50"
+              placeholder="Initialize thought"
+              className={fieldClassName}
               autoFocus
               data-ocid="add_thought.input"
             />
@@ -95,10 +94,10 @@ export function AddThoughtModal({ open, onOpenChange }: AddThoughtModalProps) {
             )}
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <Label
               htmlFor="thought-description"
-              className="text-sm text-foreground/80 font-body"
+              className="text-sm text-zinc-200 font-body"
             >
               Description
             </Label>
@@ -106,53 +105,43 @@ export function AddThoughtModal({ open, onOpenChange }: AddThoughtModalProps) {
               id="thought-description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Expand on this thought..."
-              rows={3}
-              className="bg-secondary/50 border-border/50 text-foreground placeholder:text-muted-foreground focus-visible:ring-primary/50 focus-visible:border-primary/50 resize-none"
+              placeholder="Explain this thought"
+              rows={4}
+              className={`${fieldClassName} resize-none`}
               data-ocid="add_thought.textarea"
             />
+            <p className="text-[10px] tracking-[0.14em] text-zinc-500">NOT COMPULSORY</p>
           </div>
 
-          <div className="space-y-2">
-            <Label
-              htmlFor="thought-tag"
-              className="text-sm text-foreground/80 font-body"
-            >
+          <div className="space-y-2.5">
+            <Label htmlFor="thought-tag" className="text-sm text-zinc-200 font-body">
               Tag
             </Label>
-            <div className="flex items-center gap-2">
-              <Input
-                id="thought-tag"
-                value={tag}
-                onChange={(e) => setTag(e.target.value)}
-                placeholder="e.g. idea, research, todo..."
-                className="bg-secondary/50 border-border/50 text-foreground placeholder:text-muted-foreground focus-visible:ring-primary/50 focus-visible:border-primary/50"
-                data-ocid="add_thought.tag_input"
-              />
-              {tag.trim() && (
-                <Badge
-                  variant="outline"
-                  className="border-primary/50 text-primary shrink-0"
-                >
-                  {tag.trim()}
-                </Badge>
-              )}
-            </div>
+            <Input
+              id="thought-tag"
+              value={tag}
+              onChange={(e) => setTag(e.target.value)}
+              placeholder="In short"
+              className={fieldClassName}
+              data-ocid="add_thought.tag_input"
+            />
+            <p className="text-[10px] tracking-[0.14em] text-zinc-500">NOT COMPULSORY</p>
           </div>
 
-          <DialogFooter className="gap-2">
+          <DialogFooter className="justify-end gap-3 pt-1">
             <Button
               type="button"
               variant="ghost"
               onClick={handleClose}
-              className="text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-smooth"
+              className="text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900 transition-smooth"
               data-ocid="add_thought.cancel_button"
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="bg-primary text-primary-foreground hover:bg-primary/90 node-glow transition-smooth"
+              disabled={!title.trim()}
+              className="rounded-lg bg-zinc-700 px-5 font-semibold text-zinc-50 hover:bg-zinc-600 disabled:opacity-50"
               data-ocid="add_thought.submit_button"
             >
               Add Thought
