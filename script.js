@@ -1,4 +1,5 @@
 const STORAGE_KEY = "neuroweb-v1";
+const SEEDED_KEY = "neuroweb-v1-seeded";
 
 const elements = {
   thoughtForm: document.getElementById("thoughtForm"),
@@ -22,7 +23,7 @@ let network;
 bootstrap();
 
 function bootstrap() {
-  if (state.thoughts.length === 0) {
+  if (state.thoughts.length === 0 && !localStorage.getItem(SEEDED_KEY)) {
     seedStarterThoughts();
   }
 
@@ -73,6 +74,7 @@ function seedStarterThoughts() {
   state.thoughts.push(...starter);
   state.connections.push({ from: starter[0].id, to: starter[1].id });
   saveState();
+  localStorage.setItem(SEEDED_KEY, "true");
 }
 
 function initNetwork() {
