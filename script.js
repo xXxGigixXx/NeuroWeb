@@ -206,26 +206,25 @@ function wireEvents() {
 
 function syncGraph() {
   nodes.clear();
-  edges.clear();
+ elements.clearAllBtn.addEventListener("click", () => {
+    const confirmed = window.confirm(
+      "Delete all thoughts and connections? This cannot be undone."
+    );
 
-  state.thoughts.forEach((thought) => {
-    nodes.add({
-      id: thought.id,
-      label: thought.title,
-      title: thought.content,
-      value: 16,
-    });
-  });
+    if (!confirmed) {
+      return;
+    }
 
-  state.connections.forEach((connection, index) => {
-    edges.add({
-      id: `${connection.from}-${connection.to}-${index}`,
-      from: connection.from,
-      to: connection.to,
-    });
+    state.thoughts = [];
+    state.connections = [];
+    saveState();
+    localStorage.setItem(SEEDED_KEY, "true");
+    syncGraph();
+    renderSelectOptions();
+    elements.detailsContent.innerHTML = "<p>Everything has been deleted.</p>";
+    setStatus("All thoughts and connections deleted.");
   });
 }
-
 function renderSelectOptions() {
   const options = state.thoughts
     .map((thought) => `<option value="${thought.id}">${escapeHtml(thought.title)}</option>`)
